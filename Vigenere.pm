@@ -1,6 +1,6 @@
 package Crypt::Vigenere;
 
-$VERSION = "0.06";
+$VERSION = "0.07";
 
 use strict;
 
@@ -26,7 +26,7 @@ sub _init {
 	my $self = shift;
 
 	foreach ( split('', lc($self->{keyword})) ) {
-		my $ks = (ord($_)-96) % 26;
+		my $ks = (ord($_)-97) % 26;
 		my $ke = $ks - 1;
  
 		my ($s, $S, $e, $E);
