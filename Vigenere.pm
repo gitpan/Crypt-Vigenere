@@ -1,6 +1,6 @@
 package Crypt::Vigenere;
 
-$VERSION = "0.05";
+$VERSION = "0.06";
 
 use strict;
 
@@ -8,8 +8,8 @@ sub new {
 	my $class = shift;
 	my $keyword = shift || '';
 
-	if( $keyword !~ /^[A-Za-z]+$/ ) {
-		die "Error: The keyword may only contain letters\n";
+	if( $keyword !~ /^[a-z]+$/ ) {
+		return;
 	};
 
 	my $self = {
@@ -26,18 +26,16 @@ sub _init {
 	my $self = shift;
 
 	foreach ( split('', lc($self->{keyword})) ) {
-		my $ks = (ord($_)-18) % 26;
+		my $ks = (ord($_)-96) % 26;
 		my $ke = $ks - 1;
  
 		my ($s, $S, $e, $E);
  
 		$s = chr(ord('a') + $ks);
-		$S = chr(ord('A') + $ks);
 		$e = chr(ord('a') + $ke);
-		$E = chr(ord('A') + $ke);
 
-		push @{$self->{fwdLookupTable}}, "a-zA-Z/$s-za-$e$S-za-$E";
-		push @{$self->{revLookupTable}}, "$s-za-$e$S-za-$E/a-zA-Z";
+		push @{$self->{fwdLookupTable}}, "a-z/$s-za-$e";
+		push @{$self->{revLookupTable}}, "$s-za-$e/a-z";
 	};
 
 	return( $self );
@@ -63,55 +61,15 @@ sub _doTheMath {
 	my $returnString;
 
 	my $count = 0;
-	foreach( split('', $string) ) {
-		if( /[a-zA-Z]{1}/ ) {
-			eval "\$_ =~ tr/$lookupTable->[$count % 4]/";
+	foreach( split('', lc($string)) ) {
+		if( /[a-z]{1}/ ) {
+			eval "\$_ =~ tr/$lookupTable->[$count % length($self->{keyword})]/";
 			$count++;
+			$returnString .= $_;
 		}
-		$returnString .= $_;
 	};
 
 	return( $returnString );
-};
-
-
-package Crypt::Substitution::PolyAlphabetic;
-
-use strict;
-
-sub generateLookupTables {
-	my $class = shift;
-	my $keyword = lc(shift);
-	my $fwdLookupTables = {};
-	my $revLookupTables = {};
-	my $letters = [];
-
-	my $stdLookupTable = [
-		'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 
-		'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
-	];
-
-	@{$letters} = split('', $keyword);
-
-	foreach my $letter ( @{$letters} ) {
-		my $bespokeLookupTable;
-		@{$bespokeLookupTable} = @{$stdLookupTable};
-		my $count = 0;
-		while( $letter ne $stdLookupTable->[$count] ) {
-			my $temp = shift @{$bespokeLookupTable};
-			push @{$bespokeLookupTable}, $temp;
-			$count++
-		};
-
-		$count = 0;
-		foreach( @{$bespokeLookupTable} ) {
-			$fwdLookupTables->{$letter}->{$stdLookupTable->[$count]} = $_;
-			$revLookupTables->{$letter}->{$_} = $stdLookupTable->[$count];
-			$count++;
-		};
-	};
-
-	return( $fwdLookupTables, $revLookupTables );
 };
 
 

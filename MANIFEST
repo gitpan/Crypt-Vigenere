@@ -1,5 +1,6 @@
-Vigenere.pm
-Makefile.PL
-MANIFEST
+Changes
 README
+MANIFEST
+Makefile.PL
+Vigenere.pm
 test.pl
