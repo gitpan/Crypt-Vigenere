@@ -1,8 +1,8 @@
 package Crypt::Vigenere;
 
-use strict;
+$VERSION = "0.05";
 
-my $VERSION = "0.04";
+use strict;
 
 sub new {
 	my $class = shift;
