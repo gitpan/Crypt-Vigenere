@@ -1,6 +1,6 @@
 package Crypt::Vigenere;
 
-$VERSION = "0.07";
+$VERSION = "0.08";
 
 use strict;
 
@@ -105,6 +105,6 @@ None by default.
 
 =head1 AUTHOR
 
-Alistair Mills, <lt>cpan@alizta.com<gt>
+Alistair Mills, http://search.cpan.org/~friffin/
 
 =cut
